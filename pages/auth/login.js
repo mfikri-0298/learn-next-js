@@ -24,7 +24,7 @@ export default function Login() {
   return (
     <div>
       <h1>Login</h1>
-      <from onSubmit={loginHandler.bind(this)}>
+      <form onSubmit={loginHandler.bind(this)}>
         <input
           onChange={fieldHandler.bind(this)}
           type="text"
@@ -39,8 +39,8 @@ export default function Login() {
           placeholder="Password"
         />
         <br />
-        <button type="submit"> Login</button>
-      </from>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 }
