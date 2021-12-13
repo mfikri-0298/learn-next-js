@@ -1,4 +1,19 @@
 import { useState } from 'react';
+import Router from 'next/router';
+
+export async function getServerSideProps({ req }) {
+  const { token } = req.cookies;
+
+  if (token) {
+    return {
+      redirect: {
+        destination: '/posts',
+        permanent: true,
+      },
+    };
+  }
+  return { props: {} };
+}
 
 export default function Register() {
   const [fields, setFields] = useState({
@@ -25,6 +40,8 @@ export default function Register() {
     const registerRes = await registerReq.json();
 
     setStatus('Success');
+
+    Router.push('/posts');
   }
 
   function fieldHandler(e) {

@@ -1,4 +1,20 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookie from 'js-cookie';
+import Router from 'next/router';
+
+export async function getServerSideProps({ req }) {
+  const { token } = req.cookies;
+
+  if (token) {
+    return {
+      redirect: {
+        destination: '/posts',
+        permanent: true,
+      },
+    };
+  }
+  return { props: {} };
+}
 
 export default function Login() {
   const [fields, setFields] = useState({
@@ -10,9 +26,9 @@ export default function Login() {
   async function loginHandler(e) {
     e.preventDefault();
 
-    setStatus('Loading');
+    setStatus('loading');
 
-    const loginReq = await fetch('api/auth/login', {
+    const loginReq = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +42,9 @@ export default function Login() {
 
     setStatus('success');
 
-    console.log(loginRes);
+    Cookie.set('token', loginRes.token);
+
+    Router.push('/posts');
   }
 
   function fieldHandler(e) {
