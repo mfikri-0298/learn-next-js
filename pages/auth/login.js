@@ -5,11 +5,28 @@ export default function Login() {
     email: '',
     password: '',
   });
+  const [status, setStatus] = useState('normal');
 
-  function loginHandler(e) {
+  async function loginHandler(e) {
     e.preventDefault();
 
-    console.log(fields);
+    setStatus('Loading');
+
+    const loginReq = await fetch('api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fields),
+    });
+
+    if (!loginReq.ok) return setStatus('error ' + loginReq.status);
+
+    const loginRes = await loginReq.json();
+
+    setStatus('success');
+
+    console.log(loginRes);
   }
 
   function fieldHandler(e) {
@@ -40,6 +57,7 @@ export default function Login() {
         />
         <br />
         <button type="submit">Login</button>
+        <div>Status: {status}</div>
       </form>
     </div>
   );
