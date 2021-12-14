@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Cookie from 'js-cookie';
 import Router from 'next/router';
+import Link from 'next/link';
+import styles from '../../styles/Home.module.css';
 
 export async function getServerSideProps({ req }) {
   const { token } = req.cookies;
@@ -58,6 +60,19 @@ export default function Login() {
 
   return (
     <div>
+      <nav>
+        <ul>
+          <Link href="/auth/register">
+            <a className={styles.nav}>Register</a>
+          </Link>
+          <Link href="/auth/login">
+            <a className={styles.nav}>login</a>
+          </Link>
+          <Link href="/posts">
+            <a className={styles.nav}>Posts</a>
+          </Link>
+        </ul>
+      </nav>
       <h1>Login</h1>
       <form onSubmit={loginHandler.bind(this)}>
         <input

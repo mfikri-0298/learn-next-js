@@ -1,19 +1,7 @@
 import { useState } from 'react';
 import Router from 'next/router';
-
-export async function getServerSideProps({ req }) {
-  const { token } = req.cookies;
-
-  if (token) {
-    return {
-      redirect: {
-        destination: '/posts',
-        permanent: true,
-      },
-    };
-  }
-  return { props: {} };
-}
+import Link from 'next/link';
+import styles from '../../styles/Home.module.css';
 
 export default function Register() {
   const [fields, setFields] = useState({
@@ -41,7 +29,7 @@ export default function Register() {
 
     setStatus('Success');
 
-    Router.push('/posts');
+    Router.push('/auth/login');
   }
 
   function fieldHandler(e) {
@@ -55,6 +43,19 @@ export default function Register() {
 
   return (
     <div>
+      <nav>
+        <ul>
+          <Link href="/auth/register">
+            <a className={styles.nav}>Register</a>
+          </Link>
+          <Link href="/auth/login">
+            <a className={styles.nav}>login</a>
+          </Link>
+          <Link href="/posts">
+            <a className={styles.nav}>Posts</a>
+          </Link>
+        </ul>
+      </nav>
       <h1>Register</h1>
       <form onSubmit={registerHandler.bind(this)}>
         <input
