@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export async function getServerSideProps({ req }) {
   const { token } = req.cookies;
 
@@ -18,20 +20,47 @@ export async function getServerSideProps({ req }) {
 
   const posts = await postReq.json();
 
-  console.log(posts);
-
-  return { props: { posts: posts.data } };
+  return { props: { token, posts: posts.data } };
 }
 
 export default function PostIndex(props) {
-  console.log(props);
+  const [posts, setPosts] = useState(props.posts);
+
+  async function deleteHandler(id, e) {
+    e.preventDefault();
+
+    const { token } = props;
+
+    const ask = confirm('apakah data ini akan anda hapus');
+
+    if (ask) {
+      const deletePost = await fetch('/api/posts/delete/' + id, {
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      const res = await deletePost.json();
+
+      const postsFiltered = posts.filter((post) => {
+        return post.id !== id && post;
+      });
+
+      setPosts(postsFiltered);
+    }
+  }
   return (
     <div>
       <h1>Posts</h1>
-      {props.posts.map((post) => (
+      {posts.map((post) => (
         <div key={post.id}>
-          <h2>{post.title}</h2>
+          <h3>{post.title}</h3>
           <p>{post.content}</p>
+          <div>
+            <button>Edit</button>
+            <button onClick={deleteHandler.bind(this, post.id)}>Delete</button>
+          </div>
+          <hr />
         </div>
       ))}
     </div>
