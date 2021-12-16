@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Router from 'next/router';
+import Nav from '../../components/Nav';
 
 export async function getServerSideProps({ req }) {
   const { token } = req.cookies;
@@ -49,15 +51,21 @@ export default function PostIndex(props) {
       setPosts(postsFiltered);
     }
   }
+
+  function editHandler(id) {
+    Router.push('/posts/edit/' + id);
+  }
+
   return (
     <div>
+      <Nav />
       <h1>Posts</h1>
       {posts.map((post) => (
         <div key={post.id}>
           <h3>{post.title}</h3>
           <p>{post.content}</p>
           <div>
-            <button>Edit</button>
+            <button onClick={editHandler.bind(this, post.id)}>Edit</button>
             <button onClick={deleteHandler.bind(this, post.id)}>Delete</button>
           </div>
           <hr />
